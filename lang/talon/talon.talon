@@ -11,7 +11,7 @@ action(user.code_operator_addition): " + "
 action(user.code_operator_multiplication): " * "
 action(user.code_operator_division): " / "
 action(user.code_operator_assignment): " = "
-action(user.code_comment): "#"
+action(user.code_comment): "# "
 
 dot talon: insert(".talon")
 #defintion blocks for the context
@@ -63,3 +63,4 @@ funk wrap <number>:
     user.code_select_function(number - 1, clip.text())
 	clip.set_text(old_clip)
 	
+user dot text: "<user.text>"

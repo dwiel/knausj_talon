@@ -7,19 +7,21 @@ tag(): user.splits
 tag(): user.tabs
 
 #talon app actions (+custom tab actions)
-action(user.tab_final): user.idea("action GoToLastTab")
+action(user.tab_final): user.idea("action GoToLastTab"  )
 action(app.tab_next): user.idea("action NextTab")
 action(app.tab_previous): user.idea("action PreviousTab")
-action(app.tab_close): user.idea("action CloseActiveTab")
-
+action(app.tab_close): user.idea("action CloseContent")
+action(app.tab_reopen): user.idea("action ReopenClosedTab")
 #talon code actions
 action(code.toggle_comment): user.idea("action CommentByLineComment")
 
 #talon edit actions
-action(edit.copy): user.idea("action EditorCopy")
-action(edit.cut): user.idea("action EditorCut")
-action(edit.delete): user.idea("action EditorBackSpace")
-action(edit.paste): user.idea("action EditorPaste")
+# uncomment to these if you are using a vim mode.
+# TODO: enable these by default, but don't trigger them if a modal window is up.
+# action(edit.copy): user.idea("action EditorCopy")
+# action(edit.cut): user.idea("action EditorCut")
+# action(edit.delete): user.idea("action EditorBackSpace")
+# action(edit.paste): user.idea("action EditorPaste")
 action(edit.find_next): user.idea("action FindNext")
 action(edit.find_previous): user.idea("action FindPrevious")
 action(edit.find): user.idea("action Find")
@@ -28,9 +30,13 @@ action(edit.line_swap_down):  user.idea("action MoveLineDown")
 action(edit.line_swap_up):  user.idea("action MoveLineUp")
 action(edit.indent_more): user.idea("action EditorIndentLineOrSelection")
 action(edit.indent_less): user.idea("action EditorUnindentSelection")
-action(edit.select_line): user.idea("action EditorLineStart, action EditorLineEndWithSelection")
+action(edit.select_line): user.idea("action EditorSelectLine")
 action(edit.select_word): user.idea("action EditorSelectWord")
 action(edit.select_all): user.idea("action $SelectAll")
+action(edit.file_start): user.idea("action EditorTextStart")
+action(edit.file_end): user.idea("action EditorTextEnd")
+action(edit.extend_file_start): user.idea("action EditorTextStartWithSelection")
+action(edit.extend_file_end): user.idea("action EditorTextEndWithSelection")
 
 # splits.py support begin
 action(user.split_clear_all): user.idea("action UnsplitAll")
@@ -86,6 +92,7 @@ refactor rename: user.idea("action RenameElement")
 rename file: user.idea("action RenameFile")
 fix (format | formatting): user.idea("action ReformatCode")
 fix imports: user.idea("action OptimizeImports")
+
 #navigation
 (go declaration | follow): user.idea("action GotoDeclaration")
 go implementation: user.idea("action GotoImplementation")
@@ -95,14 +102,19 @@ go test: user.idea("action GotoTest")
 go back: user.idea("action Back")
 go forward: user.idea("action Forward")
 # Search
-find (everywhere | all): user.idea("action SearchEverywhere")
-find (everywhere | all) <user.text> [over]:
+(find | marco) (everywhere | all): user.idea("action SearchEverywhere")
+(find | marco) (everywhere | all) <user.text> [over]:
   user.idea("action SearchEverywhere")
   sleep(500ms)
   insert(text)
-(search | find) class: user.idea("action GotoClass")
-(search | find) file: user.idea("action GotoFile")
-(search | find) path: user.idea("action FindInPath")
+(search | find | marco) class: user.idea("action GotoClass")
+(search | find | marco) file: user.idea("action GotoFile")
+(search | find | marco) symbol: user.idea("action GotoSymbol")
+(search | find | marco) symbol <user.text>:
+    user.idea("action GotoSymbol")
+    insert(text)
+    key("enter")
+marco project: user.idea("action FindInPath")
 recent: user.idea("action RecentFiles")
 
 surround [this] with <user.text> [over]:
@@ -160,6 +172,12 @@ create file <user.text> [over]:
   user.idea("action NewElement")
   sleep(500ms)
   insert(text)
+create python file:
+  user.idea("action NewElement")
+  sleep(300ms)
+  insert("python file")
+  sleep(300ms)
+  key("enter")
 # Task Management
 go task: user.idea("action tasks.goto")
 go browser task: user.idea("action tasks.open.in.browser")
@@ -257,6 +275,7 @@ fix last (error | air):
 # Special Selects
 select less: user.idea("action EditorUnSelectWord")
 select (more|this): user.idea("action EditorSelectWord")
+cell expand: user.idea("action EditorSelectWord")
 #jet brains-specific line commands. see line_commands.talon for generic ones
 expand <number> until <number>:
   user.select_range(number_1, number_2)
@@ -292,3 +311,14 @@ select camel left: user.extend_camel_left()
 select camel right: user.extend_camel_right()
 go camel left: user.camel_left()
 go camel right: user.camel_right()
+
+# requires plug-in: black-pycharm
+blacken: user.idea("action BLACKReformatCode")
+
+# zdwiel
+peach: user.idea("action GotoFile")
+peachy <user.text> [over]:
+    user.idea("action GotoFile")
+    insert(text)
+    sleep(500ms)
+    key("enter")
